@@ -66,6 +66,8 @@ Engine::~Engine()
 
     glfwTerminate();
 
+    instance.destroy() ;
+
     if (debugMode)
     {
         std::cout << "Engine shutdown completed.\n";
