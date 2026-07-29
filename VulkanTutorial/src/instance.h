@@ -2,6 +2,79 @@
 
 namespace vkInit
 {
+    // Checking the Supported - Extension and Layers
+    bool supported(std::vector<const char *> &extensions, std::vector<const char *> &layers, bool debug)
+    {
+        // Extension Having
+        std::vector<vk::ExtensionProperties> supportedExtensions = vk::enumerateInstanceExtensionProperties();
+        if (debug)
+        {
+            std::cout << " --------------------------------------------------- \n ";
+            std::cout << "Device can Supported Following Extensions:\n";
+            for (vk::ExtensionProperties supportExtension : supportedExtensions)
+            {
+                std::cout << supportExtension.extensionName << std::endl;
+            }
+        }
+        // Supporting Extension
+        bool found;
+        std::cout << " --------------------------------------------------- \n ";
+        for (const char *extension : extensions)
+        {
+            found = false;
+            for (vk::ExtensionProperties supportedExtension : supportedExtensions)
+            {
+                if (strcmp(extension, supportedExtension.extensionName) == 0)
+                {
+                    found = true;
+                    if (debug)
+                        std::cout << "Extension - " << extension << " - Supported " << std::endl;
+                }
+            }
+            if (!found)
+            {
+                if (debug)
+                {
+                    std::cout << "Extension - " << extension << " - Not Supported " << std::endl;
+                }
+            }
+        }
+        // Layers Having
+        std::vector<vk::LayerProperties> supportedLayers = vk::enumerateInstanceLayerProperties();
+        if (debug)
+        {
+            std::cout << " --------------------------------------------------- \n ";
+            std::cout << "Supported Following Extensions:\n";
+            for (vk::LayerProperties supportedLayer : supportedLayers)
+            {
+                std::cout << supportedLayer.layerName << std::endl;
+            }
+        }
+        std::cout << " --------------------------------------------------- \n ";
+        for (const char* layer : layers)
+        {
+            found = false;
+            for (vk::LayerProperties supportedLayer : supportedLayers)
+            {
+                if (strcmp(layer, supportedLayer.layerName) == 0)
+                {
+                    found = true;
+                    if (debug)
+                        std::cout << "Layers - " << layer << " - Supported " << std::endl;
+                }
+            }
+            if (!found)
+            {
+                if (debug)
+                {
+                    std::cout << "Layers - " << layer << " - Not Supported " << std::endl;
+                }
+            }
+        }
+
+        return true;
+    }
+
     // Creates and returns a Vulkan Instance.
     // This is the root Vulkan object that connects the application
     // to the Vulkan runtime and GPU driver.
@@ -70,16 +143,27 @@ namespace vkInit
             }
         }
 
+        // Handling the LAYERS
+        std::vector<const char *> layers;
+        if (debug)
+        {
+            layers.push_back("VK_LAYER_KHRONOS_validation");
+        }
+
+        if (!supported(extensions, layers, debug))
+        {
+            return nullptr;
+        }
+
         // Fill the Vulkan InstanceCreateInfo structure.
         // This structure tells Vulkan everything needed to create
         // the VkInstance.
         vk::InstanceCreateInfo createInfo(
-            vk::InstanceCreateFlags(),                   // No special creation flags
-            &appInfo,                                   // Application information
-            0,                                          // Validation layer count (deprecated)
-            nullptr,                                    // Validation layer names (deprecated)
-            static_cast<uint32_t>(extensions.size()),   // Number of required extensions
-            extensions.data()                           // Pointer to extension name array
+            vk::InstanceCreateFlags(),                           // No special creation flags
+            &appInfo,                                            // Application information                                                  // Validation layer count (deprecated)
+            static_cast<uint32_t>(layers.size()), layers.data(), // Validation layer names (deprecated)
+            static_cast<uint32_t>(extensions.size()),            // Number of required extensions
+            extensions.data()                                    // Pointer to extension name array
         );
 
         try
