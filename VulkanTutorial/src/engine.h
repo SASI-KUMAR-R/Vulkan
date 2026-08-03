@@ -18,12 +18,18 @@ private:
 
     GLFWwindow *window{nullptr};
 
+    // instance - related variables
+    vk::Instance instance{nullptr};
+    vk::DebugUtilsMessengerEXT debugMessenger{nullptr};
+    vk::detail::DispatchLoaderDynamic dldi;
+
+    // instance setup
+    void make_instance();
+
     // glfw setup
     void build_glfw_window();
 
-    // vulkan instance
-    vk::Instance instance{nullptr};
+    // device setup 
+    void make_device() ; 
 
-    //instance setup
-    void make_instance(); 
 };

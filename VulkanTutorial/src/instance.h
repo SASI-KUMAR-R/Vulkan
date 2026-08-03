@@ -131,6 +131,10 @@ namespace vkInit
         std::vector<const char *> extensions(
             glfwExtensions,
             glfwExtensions + glfwExtensionCount);
+            if(debug)
+            {
+                extensions.push_back("VK_EXT_debug_utils") ; 
+            }
 
         // Print all required Vulkan instance extensions.
         if (debug)

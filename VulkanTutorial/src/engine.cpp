@@ -1,6 +1,7 @@
 #include "engine.h"
 #include "config.h"
 #include "instance.h"
+#include "logging.h"
 
 Engine::Engine()
 {
@@ -11,7 +12,7 @@ Engine::Engine()
 
     build_glfw_window();
 
-    make_instance() ; 
+    make_instance();
 }
 
 void Engine::build_glfw_window()
@@ -34,8 +35,7 @@ void Engine::build_glfw_window()
         height,
         "Vulkan",
         nullptr,
-        nullptr
-    );
+        nullptr);
 
     // Check if window creation succeeded
     if (window == nullptr)
@@ -54,7 +54,13 @@ void Engine::build_glfw_window()
 
 void Engine::make_instance()
 {
-    instance = vkInit::make_instance(debugMode,"Vulkan_Sasi") ; 
+    instance = vkInit::make_instance(debugMode, "Vulkan_Sasi");
+    dldi = vk::detail::DispatchLoaderDynamic(instance, vkGetInstanceProcAddr);
+
+    if (debugMode)
+    {
+        debugMessenger = vkInit::make_debug_messenger(instance, dldi);
+    }
 }
 
 Engine::~Engine()
@@ -64,12 +70,14 @@ Engine::~Engine()
         glfwDestroyWindow(window);
     }
 
-    glfwTerminate();
-
-    instance.destroy() ;
-
     if (debugMode)
     {
         std::cout << "Engine shutdown completed.\n";
     }
+
+    instance.destroyDebugUtilsMessengerEXT(debugMessenger, nullptr, dldi);
+
+    instance.destroy();
+
+    glfwTerminate();
 }
