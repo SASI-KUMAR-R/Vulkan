@@ -23,6 +23,8 @@ private:
     vk::DebugUtilsMessengerEXT debugMessenger{nullptr};
     vk::detail::DispatchLoaderDynamic dldi;
 
+    vk::PhysicalDevice physicalDevice{nullptr} ; 
+
     // instance setup
     void make_instance();
 

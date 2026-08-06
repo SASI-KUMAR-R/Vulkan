@@ -9,7 +9,8 @@ namespace vkInit
         std::vector<vk::ExtensionProperties> supportedExtensions = vk::enumerateInstanceExtensionProperties();
         if (debug)
         {
-            std::cout << " --------------------------------------------------- \n ";
+            std::cout << std::endl ; 
+            std::cout << " ----------extension checking----------------------------------------- \n ";
             std::cout << "Device can Supported Following Extensions:\n";
             for (vk::ExtensionProperties supportExtension : supportedExtensions)
             {
@@ -18,7 +19,6 @@ namespace vkInit
         }
         // Supporting Extension
         bool found;
-        std::cout << " --------------------------------------------------- \n ";
         for (const char *extension : extensions)
         {
             found = false;
@@ -39,18 +39,20 @@ namespace vkInit
                 }
             }
         }
+
+        std::cout << " --------extension checking end------------------------------------------ \n ";
         // Layers Having
         std::vector<vk::LayerProperties> supportedLayers = vk::enumerateInstanceLayerProperties();
         if (debug)
         {
-            std::cout << " --------------------------------------------------- \n ";
+            std::cout << std::endl ; 
+            std::cout << " ----------layers checking ----------------------------------------- \n ";
             std::cout << "Supported Following Extensions:\n";
             for (vk::LayerProperties supportedLayer : supportedLayers)
             {
                 std::cout << supportedLayer.layerName << std::endl;
             }
         }
-        std::cout << " --------------------------------------------------- \n ";
         for (const char* layer : layers)
         {
             found = false;
@@ -71,6 +73,7 @@ namespace vkInit
                 }
             }
         }
+        std::cout << " ----------layers checking end----------------------------------------- \n ";
 
         return true;
     }

@@ -2,6 +2,7 @@
 #include "config.h"
 #include "instance.h"
 #include "logging.h"
+#include "device.h"
 
 Engine::Engine()
 {
@@ -13,6 +14,8 @@ Engine::Engine()
     build_glfw_window();
 
     make_instance();
+
+    make_device() ; 
 }
 
 void Engine::build_glfw_window()
@@ -61,6 +64,12 @@ void Engine::make_instance()
     {
         debugMessenger = vkInit::make_debug_messenger(instance, dldi);
     }
+}
+
+void Engine::make_device()
+{
+    physicalDevice = vkInit::choose_physical_device(instance,debugMode) ; 
+    vkInit::findQueueFamilies(physicalDevice,debugMode) ; 
 }
 
 Engine::~Engine()
