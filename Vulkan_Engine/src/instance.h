@@ -1,3 +1,5 @@
+// File name : instance.h
+
 #include "config.h"
 
 namespace vkInit
@@ -40,11 +42,11 @@ namespace vkInit
             }
         }
 
-        std::cout << " --------extension checking end------------------------------------------ \n ";
         // Layers Having
         std::vector<vk::LayerProperties> supportedLayers = vk::enumerateInstanceLayerProperties();
         if (debug)
         {
+            std::cout << " --------extension checking end------------------------------------------ \n ";
             std::cout << std::endl ; 
             std::cout << " ----------layers checking ----------------------------------------- \n ";
             std::cout << "Supported Following Extensions:\n";
@@ -52,6 +54,7 @@ namespace vkInit
             {
                 std::cout << supportedLayer.layerName << std::endl;
             }
+            std::cout << " ----------layers checking end----------------------------------------- \n ";
         }
         for (const char* layer : layers)
         {
@@ -73,7 +76,6 @@ namespace vkInit
                 }
             }
         }
-        std::cout << " ----------layers checking end----------------------------------------- \n ";
 
         return true;
     }

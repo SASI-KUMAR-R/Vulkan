@@ -1,3 +1,5 @@
+// File name : engine.cpp
+
 #include "engine.h"
 #include "config.h"
 #include "instance.h"
@@ -15,7 +17,7 @@ Engine::Engine()
 
     make_instance();
 
-    make_device() ; 
+    make_device();
 }
 
 void Engine::build_glfw_window()
@@ -64,29 +66,61 @@ void Engine::make_instance()
     {
         debugMessenger = vkInit::make_debug_messenger(instance, dldi);
     }
+
+    VkSurfaceKHR c_style_surface;
+    if (glfwCreateWindowSurface(instance, window, nullptr, &c_style_surface) != VK_SUCCESS)
+    {
+        if (debugMode)
+        {
+            std::cout << "Failed to Successfully connect to surface \n";
+        }
+    }
+    else if (debugMode)
+    {
+        std::cout << "Successfully connect to surface \n";
+    }
+
+    surface = c_style_surface ; 
 }
 
 void Engine::make_device()
 {
-    physicalDevice = vkInit::choose_physical_device(instance,debugMode) ; 
-    vkInit::findQueueFamilies(physicalDevice,debugMode) ; 
+    physicalDevice = vkInit::choose_physical_device(instance, debugMode);
+    device = vkInit::create_logical_device(physicalDevice, surface, debugMode);
+    std::array<vk::Queue, 2> queues = vkInit::get_queue(physicalDevice, device, surface, debugMode);
+    graphicsQueue = queues[0];
+    presentQueue = queues[0];
+    vkInit::query_swapchain_support(physicalDevice,surface,debugMode) ; 
 }
 
 Engine::~Engine()
 {
+    // 1. Destroy the logical device (and ideally, ensure the GPU is idle first)
+    device.destroy();
+
+    // 2. Destroy the surface BEFORE destroying the window it is attached to
+    instance.destroySurfaceKHR(surface);
+
+    // 3. Destroy the debug messenger
+    if (debugMessenger)
+    {
+        instance.destroyDebugUtilsMessengerEXT(debugMessenger, nullptr, dldi);
+    }
+
+    // 4. Destroy the Vulkan instance itself
+    instance.destroy();
+
+    // 5. NOW it is safe to destroy the OS window
     if (window != nullptr)
     {
         glfwDestroyWindow(window);
     }
 
+    // 6. Terminate the windowing library
+    glfwTerminate();
+
     if (debugMode)
     {
         std::cout << "Engine shutdown completed.\n";
     }
-
-    instance.destroyDebugUtilsMessengerEXT(debugMessenger, nullptr, dldi);
-
-    instance.destroy();
-
-    glfwTerminate();
 }

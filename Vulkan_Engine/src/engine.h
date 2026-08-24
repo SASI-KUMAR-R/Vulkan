@@ -1,3 +1,4 @@
+// File name : engine.h
 
 #pragma once
 #define GLFW_INCLUDE_VULKAN
@@ -22,8 +23,13 @@ private:
     vk::Instance instance{nullptr};
     vk::DebugUtilsMessengerEXT debugMessenger{nullptr};
     vk::detail::DispatchLoaderDynamic dldi;
+    vk::SurfaceKHR surface;
 
-    vk::PhysicalDevice physicalDevice{nullptr} ; 
+    // device-related variable
+    vk::PhysicalDevice physicalDevice{nullptr};
+    vk::Device device{nullptr};
+    vk::Queue graphicsQueue{nullptr};
+    vk::Queue presentQueue{nullptr};
 
     // instance setup
     void make_instance();
@@ -31,7 +37,6 @@ private:
     // glfw setup
     void build_glfw_window();
 
-    // device setup 
-    void make_device() ; 
-
+    // device setup
+    void make_device();
 };
