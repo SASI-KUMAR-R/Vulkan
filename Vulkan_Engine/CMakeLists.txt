@@ -11,6 +11,16 @@ find_package(glfw3 REQUIRED)
 add_executable(Vulkan_Engine
     src/main.cpp
     src/engine.cpp
+    src/engine.h
+    src/config.h
+    src/instance.h
+    src/device.h
+    src/swapchain.h
+    src/frame.h
+    src/logging.h
+    src/queue_families.h
+    src/shaders.h
+    src/pipeline.h
 )
 
 target_link_libraries(Vulkan_Engine PRIVATE

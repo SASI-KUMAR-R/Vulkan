@@ -1,11 +1,10 @@
-// File name : main.cpp
-
 #include "engine.h"
 
-int main()
-{
-    Engine* graphicsEngine = new Engine() ; 
-    delete graphicsEngine ; 
+int main() {
 
-    return 0 ; 
+	Engine* graphicsEngine = new Engine();
+
+	delete graphicsEngine;
+
+	return 0;
 }

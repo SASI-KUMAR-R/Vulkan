@@ -1,42 +1,53 @@
-// File name : engine.h
-
 #pragma once
-#define GLFW_INCLUDE_VULKAN
-#include <GLFW/glfw3.h>
 #include "config.h"
+#include "frame.h"
 
-class Engine
-{
+class Engine {
+
 public:
-    Engine();
-    ~Engine();
+
+	Engine();
+
+	~Engine();
 
 private:
-    bool debugMode = true;
 
-    int width{650};
-    int height{480};
+	//whether to print debug messages in functions
+	bool debugMode = true;
 
-    GLFWwindow *window{nullptr};
+	//glfw-related variables
+	int width{ 640 };
+	int height{ 480 };
+	GLFWwindow* window{ nullptr };
 
-    // instance - related variables
-    vk::Instance instance{nullptr};
-    vk::DebugUtilsMessengerEXT debugMessenger{nullptr};
-    vk::detail::DispatchLoaderDynamic dldi;
-    vk::SurfaceKHR surface;
+	//instance-related variables
+	vk::Instance instance{ nullptr };
+	vk::DebugUtilsMessengerEXT debugMessenger{ nullptr };
+	vk::detail::DispatchLoaderDynamic dldi;
+	vk::SurfaceKHR surface;
 
-    // device-related variable
-    vk::PhysicalDevice physicalDevice{nullptr};
-    vk::Device device{nullptr};
-    vk::Queue graphicsQueue{nullptr};
-    vk::Queue presentQueue{nullptr};
+	//device-related variables
+	vk::PhysicalDevice physicalDevice{ nullptr };
+	vk::Device device{ nullptr };
+	vk::Queue graphicsQueue{ nullptr };
+	vk::Queue presentQueue{ nullptr };
+	vk::SwapchainKHR swapchain{ nullptr };
+	std::vector<vkUtil::SwapChainFrame> swapchainFrames;
+	vk::Format swapchainFormat;
+	vk::Extent2D swapchainExtent;
 
-    // instance setup
-    void make_instance();
+	//pipeline related variables
+	
 
-    // glfw setup
-    void build_glfw_window();
+	//glfw setup
+	void build_glfw_window();
 
-    // device setup
-    void make_device();
+	//instance setup
+	void make_instance();
+
+	//device setup
+	void make_device();
+
+	//pipeline setup 
+	void make_pipeline();
 };
